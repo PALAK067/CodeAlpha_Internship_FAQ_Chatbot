@@ -21,6 +21,12 @@ except LookupError:
 # Page configuration
 st.set_page_config(page_title="CodeAlpha Task 2: FAQ Chatbot", page_icon="✨", layout="wide")
 
+# Initialize Session State
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+if "theme" not in st.session_state:
+    st.session_state.theme = "light"
+
 # Load FAQs from JSON file
 @st.cache_data
 def load_faqs(filepath='faqs.json'):
@@ -83,43 +89,64 @@ def get_best_response(user_query):
 
     return response
 
-# Custom CSS to match the exact Gradio Rosegold Theme
-st.markdown("""
+# Dynamic Theme Colors
+is_dark = st.session_state.theme == "dark"
+
+bg_app = "#1E1214" if is_dark else "#FDF4F5"
+bg_container = "rgba(38, 24, 27, 0.94)" if is_dark else "rgba(255, 255, 255, 0.90)"
+border_container = "rgba(224, 166, 175, 0.3)" if is_dark else "rgba(183, 110, 121, 0.15)"
+text_heading = "#E0A6AF" if is_dark else "#B76E79"
+text_subtitle = "#D4B0B7" if is_dark else "#888888"
+btn_bg = "rgba(224, 166, 175, 0.12)" if is_dark else "rgba(183, 110, 121, 0.08)"
+btn_border = "#E0A6AF" if is_dark else "#B76E79"
+btn_color = "#E0A6AF" if is_dark else "#A25F69"
+chat_bg = "#25171A" if is_dark else "#FDF4F5"
+chat_border = "rgba(224, 166, 175, 0.3)" if is_dark else "rgba(183, 110, 121, 0.25)"
+bot_bubble_bg = "rgba(45, 30, 34, 0.95)" if is_dark else "rgba(255, 255, 255, 0.95)"
+bot_bubble_text = "#FDF4F5" if is_dark else "#4A3B3C"
+bot_bubble_border = "#E0A6AF" if is_dark else "#B76E79"
+input_bg = "#2D1E20" if is_dark else "#FFFFFF"
+input_text = "#FDF4F5" if is_dark else "#333333"
+input_border = "rgba(224, 166, 175, 0.4)" if is_dark else "rgba(183, 110, 121, 0.4)"
+
+# Custom CSS
+st.markdown(f"""
 <style>
-/* Streamlit main container styling */
-.stApp {
+/* Main App Background with Watermark */
+.stApp {{
     background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Code_Icon.svg/512px-Code_Icon.svg.png') !important;
     background-repeat: no-repeat !important;
     background-position: center center !important;
     background-attachment: fixed !important;
     background-size: 50% !important;
-    background-color: #FDF4F5 !important;
-}
+    background-color: {bg_app} !important;
+    color: {bot_bubble_text} !important;
+}}
 
-/* Glassmorphism main card wrapper */
-.block-container {
-    background: rgba(255, 255, 255, 0.90) !important;
-    backdrop-filter: blur(10px) !important;
+/* Glassmorphism Main Card Container */
+.block-container {{
+    background: {bg_container} !important;
+    backdrop-filter: blur(12px) !important;
     border-radius: 20px !important;
-    box-shadow: 0 8px 32px 0 rgba(183, 110, 121, 0.2) !important;
-    border: 1px solid rgba(183, 110, 121, 0.15) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, {'0.5' if is_dark else '0.15'}) !important;
+    border: 1px solid {border_container} !important;
     padding: 2.5rem 3rem !important;
     margin-top: 2rem !important;
     max-width: 1200px !important;
-}
+}}
 
 /* Headings */
-h1, h2, h3, h4 {
-    color: #B76E79 !important;
+h1, h2, h3, h4 {{
+    color: {text_heading} !important;
     font-weight: 800 !important;
     text-shadow: 1px 1px 2px rgba(183, 110, 121, 0.1);
-}
+}}
 
-/* Suggested Questions Buttons */
-div.stButton > button {
-    background: rgba(183, 110, 121, 0.08) !important;
-    border: 1px solid #B76E79 !important;
-    color: #A25F69 !important;
+/* Suggested Question Buttons */
+div.stButton > button {{
+    background: {btn_bg} !important;
+    border: 1px solid {btn_border} !important;
+    color: {btn_color} !important;
     font-weight: 600 !important;
     margin-bottom: 8px !important;
     border-radius: 8px !important;
@@ -127,35 +154,36 @@ div.stButton > button {
     text-align: left !important;
     width: 100% !important;
     padding: 0.6rem 1rem !important;
-}
-div.stButton > button:hover {
-    background: #B76E79 !important;
-    color: white !important;
+}}
+div.stButton > button:hover {{
+    background: {btn_border} !important;
+    color: {'#1E1214' if is_dark else 'white'} !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(183, 110, 121, 0.4) !important;
-}
+}}
 
-/* Send & Clear Primary Buttons */
-.primary-btn button {
+/* Primary Action Buttons */
+.primary-btn button {{
     background: linear-gradient(135deg, #B76E79 0%, #A25F69 100%) !important;
     border: none !important;
     color: white !important;
     font-weight: bold !important;
     box-shadow: 0 4px 15px rgba(183, 110, 121, 0.3) !important;
-}
-.primary-btn button:hover {
+}}
+.primary-btn button:hover {{
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(183, 110, 121, 0.5) !important;
-}
+    color: white !important;
+}}
 
-/* Chat container panel */
-.chat-panel {
-    background-color: #FDF4F5;
+/* Chat Container Panel */
+.chat-panel {{
+    background-color: {chat_bg};
     background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Code_Icon.svg/512px-Code_Icon.svg.png');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 25%;
-    border: 1px solid rgba(183, 110, 121, 0.25);
+    border: 1px solid {chat_border};
     border-radius: 12px;
     height: 480px;
     overflow-y: auto;
@@ -163,10 +191,10 @@ div.stButton > button:hover {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-}
+}}
 
-/* User chat bubble */
-.chat-bubble-user {
+/* User Chat Bubble */
+.chat-bubble-user {{
     align-self: flex-end;
     background: linear-gradient(135deg, #B76E79 0%, #A25F69 100%);
     color: white;
@@ -176,56 +204,52 @@ div.stButton > button:hover {
     box-shadow: 0 3px 10px rgba(183, 110, 121, 0.25);
     font-size: 0.95rem;
     line-height: 1.4;
-}
+}}
 
-/* Bot chat bubble */
-.chat-bubble-bot {
+/* Bot Chat Bubble */
+.chat-bubble-bot {{
     align-self: flex-start;
-    background-color: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(183, 110, 121, 0.3);
-    border-left: 4px solid #B76E79;
-    color: #4A3B3C;
+    background-color: {bot_bubble_bg};
+    border: 1px solid {chat_border};
+    border-left: 4px solid {bot_bubble_border};
+    color: {bot_bubble_text};
     padding: 10px 16px;
     border-radius: 12px 12px 12px 0;
     max-width: 80%;
-    box-shadow: 0 3px 10px rgba(183, 110, 121, 0.1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     font-size: 0.95rem;
     line-height: 1.4;
-}
+}}
 
-/* Text Input container */
-div[data-testid="stTextInput"] input {
-    border: 1px solid rgba(183, 110, 121, 0.4) !important;
+/* Text Input Styling */
+div[data-testid="stTextInput"] input {{
+    border: 1px solid {input_border} !important;
     border-radius: 8px !important;
-    background-color: white !important;
-    color: #333 !important;
-}
-div[data-testid="stTextInput"] input:focus {
-    border-color: #B76E79 !important;
+    background-color: {input_bg} !important;
+    color: {input_text} !important;
+}}
+div[data-testid="stTextInput"] input:focus {{
+    border-color: {text_heading} !important;
     box-shadow: 0 0 0 2px rgba(183, 110, 121, 0.2) !important;
-}
+}}
 </style>
 """, unsafe_allow_html=True)
 
 # App Header
-st.markdown("""
+st.markdown(f"""
 <div style="text-align: center; margin-bottom: 1.5rem;">
     <h1 style="font-size: 2.8em; margin-bottom: 0;">✨ CodeAlpha Task 2: FAQ Chatbot</h1>
-    <p style="font-size: 1.1em; color: #888; margin-top: 5px;">Your smart, rosegold-themed AI assistant for customer service.</p>
+    <p style="font-size: 1.1em; color: {text_subtitle}; margin-top: 5px;">Your smart, rosegold-themed AI assistant for customer service.</p>
 </div>
 """, unsafe_allow_html=True)
-
-# Initialize Session State
-if "messages" not in st.session_state:
-    st.session_state.messages = []
 
 # Two-column layout matching Gradio exactly
 col_left, col_right = st.columns([1, 2.3], gap="large")
 
-# Left Column: Suggested Questions
+# Left Column: Suggested Questions & Theme Settings
 with col_left:
     st.markdown("### 📌 Suggested Questions")
-    st.markdown("<p style='font-size: 0.9em; color: #666;'>Click any question below to instantly ask the chatbot. These remain visible throughout your session.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 0.9em; color: {text_subtitle};'>Click any question below to instantly ask the chatbot. These remain visible throughout your session.</p>", unsafe_allow_html=True)
     
     for q in questions:
         if st.button(q, key=f"btn_{q}"):
@@ -233,6 +257,13 @@ with col_left:
             resp = get_best_response(q)
             st.session_state.messages.append({"role": "bot", "content": resp})
             st.rerun()
+            
+    st.markdown("---")
+    st.markdown("### ⚙️ Theme Settings")
+    theme_label = "☀️ Switch to Light Pastel Theme" if is_dark else "🌙 Switch to Deep Rosewood Dark Theme"
+    if st.button(theme_label, key="toggle_theme_btn"):
+        st.session_state.theme = "light" if is_dark else "dark"
+        st.rerun()
 
 # Right Column: Chat History and Input
 with col_right:
@@ -241,7 +272,7 @@ with col_right:
     # Construct Chat HTML
     chat_content = ""
     if not st.session_state.messages:
-        chat_content = "<div style='text-align: center; color: #999; margin: auto;'>👋 Welcome! Ask a question below or choose from the suggestions on the left.</div>"
+        chat_content = f"<div style='text-align: center; color: {text_subtitle}; margin: auto;'>👋 Welcome! Ask a question below or choose from the suggestions on the left.</div>"
     else:
         for msg in st.session_state.messages:
             if msg["role"] == "user":
