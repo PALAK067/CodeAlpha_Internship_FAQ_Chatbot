@@ -1,0 +1,42 @@
+[
+    {
+        "question": "What is your return policy? 📦",
+        "answer": "We offer a 30-day return policy for all unused and unopened items. If you are not satisfied with your purchase, you can return it within 30 days of receipt for a full refund! ✨"
+    },
+    {
+        "question": "How long does it take for standard shipping? 🚚",
+        "answer": "Standard shipping typically takes 3-5 business days within the continental US. International shipping can take 7-14 business days depending on customs processing! ✈️"
+    },
+    {
+        "question": "Can I get a discount if I order a lot of items? 💰",
+        "answer": "Yes, we offer bulk discounts! Orders of 50+ items receive a 10% discount, and orders of 100+ items receive a 15% discount. Please contact our sales team for bulk pricing! 🏷️"
+    },
+    {
+        "question": "Do you ship internationally? 🌍",
+        "answer": "Yes, we ship to over 50 countries worldwide! Shipping costs and delivery times vary by destination. You can see the exact shipping options at checkout. 🚢"
+    },
+    {
+        "question": "How do I track my order status? 🔍",
+        "answer": "Once your order ships, you will receive an email with a tracking number. You can use this number on our Tracking page to see real-time updates on your package! 📦"
+    },
+    {
+        "question": "What payment methods do you accept? 💳",
+        "answer": "We accept Visa, MasterCard, American Express, PayPal, Apple Pay, and Google Pay! 🏦"
+    },
+    {
+        "question": "Is there a warranty on your products? 🛡️",
+        "answer": "All our electronics come with a standard 1-year manufacturer's warranty covering defects. Accidental damage is not covered. 🔧"
+    },
+    {
+        "question": "How can I contact customer support? 🎧",
+        "answer": "You can reach our support team 24/7 via the live chat widget on our website, or email us at support@example.com. We typically reply within 2 hours! 📧"
+    },
+    {
+        "question": "Do you offer gift wrapping? 🎁",
+        "answer": "Yes! You can select the 'Gift Wrap' option at checkout for an additional $4.99. You can also include a personalized message! 🎀"
+    },
+    {
+        "question": "Can I cancel or change my order after placing it? ✏️",
+        "answer": "Orders can be canceled or modified within 1 hour of placement. After that, the order enters processing and cannot be changed until you receive it and initiate a return. ⏳"
+    }
+]
