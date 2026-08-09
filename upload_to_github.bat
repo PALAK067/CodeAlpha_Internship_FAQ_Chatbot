@@ -1,17 +1,17 @@
 @echo off
 echo ========================================================
-echo GITHUB OVERWRITE SCRIPT FOR CODEALPHA TASK 2
+echo GITHUB PUSH SCRIPT FOR STREAMLIT CLOUD DEPLOYMENT
 echo ========================================================
 echo.
-echo Committing the Gradio version...
 git add .
-git commit -m "Restoring final Gradio Version"
+git commit -m "Deploy Streamlit Chatbot with Rosegold layout"
 
-echo Forcefully pushing to GitHub...
+echo Pushing fix to GitHub...
 git push -u origin main --force
 
 echo.
 echo ========================================================
-echo Done! Your GitHub has been forcefully overwritten with the original Gradio version.
+echo SUCCESS! Your code has been pushed to GitHub.
+echo Streamlit Cloud will now automatically rebuild and start!
 echo ========================================================
 pause
